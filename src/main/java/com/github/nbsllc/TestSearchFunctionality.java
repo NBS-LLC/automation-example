@@ -10,12 +10,26 @@ import java.util.List;
 
 public class TestSearchFunctionality extends UITestBase {
     @Test
+    public void testThatSearchingForInvalidItemReturnsNothing() {
+        HomePage homePage = HomePage.load(getDriver());
+        SearchResultsPage searchResultsPage = homePage.searchFor("invalid");
+        List<Product> products = searchResultsPage.getSearchResults();
+
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(searchResultsPage.hasWarning()).isTrue();
+        softly.assertThat(searchResultsPage.getWarningMessage()).contains("No results were found");
+        softly.assertThat(products).isEmpty();
+        softly.assertAll();
+    }
+
+    @Test
     public void testThatSearchingForValidItemReturnsResults() {
         HomePage homePage = HomePage.load(getDriver());
         SearchResultsPage searchResultsPage = homePage.searchFor("dress");
         List<Product> products = searchResultsPage.getSearchResults();
 
         SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(searchResultsPage.hasWarning()).isFalse();
         softly.assertThat(products).hasSize(7);
         softly.assertThat(products).extracting(Product::getPrice)
             .containsExactlyInAnyOrder(

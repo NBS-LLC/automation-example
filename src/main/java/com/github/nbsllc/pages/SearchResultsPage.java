@@ -2,6 +2,7 @@ package com.github.nbsllc.pages;
 
 import com.github.nbsllc.domain.Product;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -13,7 +14,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class SearchResultsPage extends BasePage {
     @FindBy(css = "ul.product_list > li")
-    List<WebElement> dblProducts;
+    private List<WebElement> dblProducts;
+
+    @FindBy(css = "p.alert-warning")
+    private WebElement lblWarning;
 
     public SearchResultsPage(WebDriver driver) {
         super(driver);
@@ -45,6 +49,32 @@ public class SearchResultsPage extends BasePage {
         }
 
         return products;
+    }
+
+    /**
+     * Try to get the page's warning message, if it exists.
+     *
+     * @return The warning message or null.
+     */
+    public String getWarningMessage() {
+        if (!hasWarning()) {
+            return null;
+        }
+
+        return lblWarning.getText().trim();
+    }
+
+    /**
+     * Determine if the page is displaying a warning message.
+     *
+     * @return True if a warning is displayed.
+     */
+    public boolean hasWarning() {
+        try {
+            return lblWarning.isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
     }
 
     private double currencyToDouble(String price) {
