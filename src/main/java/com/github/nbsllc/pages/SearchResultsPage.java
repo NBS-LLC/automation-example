@@ -1,6 +1,7 @@
 package com.github.nbsllc.pages;
 
 import com.github.nbsllc.domain.Product;
+import org.apache.logging.log4j.Level;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -21,6 +22,8 @@ public class SearchResultsPage extends BasePage {
 
     public SearchResultsPage(WebDriver driver) {
         super(driver);
+
+        logger.log(Level.getLevel("STEP"), "Loading the site's search results page.");
         assertThat(driver.getTitle()).isEqualTo("Search - My Store");
     }
 
@@ -30,6 +33,8 @@ public class SearchResultsPage extends BasePage {
      * @return The collection, which could be empty (no results).
      */
     public List<Product> getSearchResults() {
+        logger.log(Level.getLevel("STEP"), "Getting the search results.");
+
         List<Product> products = new ArrayList<>();
 
         for (WebElement webElement : dblProducts) {
@@ -48,6 +53,7 @@ public class SearchResultsPage extends BasePage {
             );
         }
 
+        logger.info(products);
         return products;
     }
 
@@ -57,11 +63,16 @@ public class SearchResultsPage extends BasePage {
      * @return The warning message or null.
      */
     public String getWarningMessage() {
+        logger.log(Level.getLevel("STEP"), "Getting the page's warning message.");
+
         if (!hasWarning()) {
+            logger.info("The page did not contain a warning message.");
             return null;
         }
 
-        return lblWarning.getText().trim();
+        String message = lblWarning.getText().trim();
+        logger.info(message);
+        return message;
     }
 
     /**
@@ -70,11 +81,17 @@ public class SearchResultsPage extends BasePage {
      * @return True if a warning is displayed.
      */
     public boolean hasWarning() {
+        logger.log(Level.getLevel("STEP"), "Determining if the page contained a warning message.");
+
+        boolean hasWarning;
         try {
-            return lblWarning.isDisplayed();
+            hasWarning = lblWarning.isDisplayed();
         } catch (NoSuchElementException e) {
-            return false;
+            hasWarning = false;
         }
+
+        logger.info(hasWarning);
+        return hasWarning;
     }
 
     private double currencyToDouble(String price) {

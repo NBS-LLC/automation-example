@@ -1,5 +1,6 @@
 package com.github.nbsllc.pages;
 
+import org.apache.logging.log4j.Level;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -15,6 +16,8 @@ public class HomePage extends BasePage {
 
     public HomePage(WebDriver driver) {
         super(driver);
+
+        logger.log(Level.getLevel("STEP"), "Loading the site's home page.");
         assertThat(driver.getTitle()).isEqualTo("My Store");
     }
 
@@ -36,6 +39,8 @@ public class HomePage extends BasePage {
      * @return An instance of the search results page.
      */
     public SearchResultsPage searchFor(String keywords) {
+        logger.log(Level.getLevel("STEP"), "Searching for: {}.", keywords);
+
         txtSearch.clear();
         txtSearch.sendKeys(keywords);
         btnSearch.click();

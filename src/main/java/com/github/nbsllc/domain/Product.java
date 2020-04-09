@@ -30,6 +30,11 @@ public class Product {
         return url;
     }
 
+    @Override
+    public String toString() {
+        return getName() + " - " + getPrice();
+    }
+
     public static class ProductBuilder {
         private String url;
         private String name;

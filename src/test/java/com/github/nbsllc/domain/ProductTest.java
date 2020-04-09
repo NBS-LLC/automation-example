@@ -30,4 +30,15 @@ public class ProductTest {
 
         assertThat(product.getPrice()).isNull();
     }
+
+    @Test
+    public void testThatToStringIsMeaningful() {
+        Product product = Product.Builder()
+            .withName("Unit Test Product")
+            .withPrice(12.34)
+            .withUrl("http://localhost/unit-test-product")
+            .build();
+
+        assertThat(product.toString()).isEqualTo("Unit Test Product - 12.34");
+    }
 }
