@@ -1,5 +1,6 @@
 package com.github.nbsllc;
 
+import com.github.nbsllc.pages.HomePage;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -30,6 +31,12 @@ public class TestHomePage {
         if (Objects.nonNull(driver)) {
             driver.close();
         }
+    }
+
+    @Test
+    public void testThatSearchingForValidItemReturnsResults() {
+        HomePage homePage = HomePage.load(driver);
+        homePage.searchFor("t-shirt");
     }
 
     @Test
