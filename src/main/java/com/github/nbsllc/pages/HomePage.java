@@ -3,15 +3,10 @@ package com.github.nbsllc.pages;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class HomePage {
-    private WebDriver driver;
-
-    // See https://tinyurl.com/w774s4s for element prefixes.
-
+public class HomePage extends BasePage {
     @FindBy(id = "search_query_top")
     private WebElement txtSearch;
 
@@ -19,9 +14,7 @@ public class HomePage {
     private WebElement btnSearch;
 
     public HomePage(WebDriver driver) {
-        this.driver = driver;
-
-        PageFactory.initElements(driver, this);
+        super(driver);
         assertThat(driver.getTitle()).isEqualTo("My Store");
     }
 
@@ -47,6 +40,6 @@ public class HomePage {
         txtSearch.sendKeys(keywords);
         btnSearch.click();
 
-        return new SearchResultsPage(driver);
+        return new SearchResultsPage(getDriver());
     }
 }
