@@ -8,6 +8,7 @@ import org.testng.annotations.Test;
 import java.util.List;
 
 import static io.restassured.RestAssured.get;
+import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestUserAPI extends APITestBase {
@@ -30,5 +31,22 @@ public class TestUserAPI extends APITestBase {
         assertThat(users).filteredOn(u -> u.getName().equals("Clementine Bauch"))
             .extracting("address.geo.lat").first()
             .isEqualTo(-68.6102);
+    }
+
+    @Test
+    public void testThatNewUsersCanBeAdded() {
+        User body = User.builder()
+            .withName("QA Tester")
+            .withUsername("qatester")
+            .build();
+
+        given()
+            .contentType(ContentType.JSON)
+            .body(body)
+            .when()
+            .post("https://jsonplaceholder.typicode.com/users")
+            .then().assertThat()
+            .statusCode(201)
+            .contentType(ContentType.JSON);
     }
 }

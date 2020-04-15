@@ -45,7 +45,7 @@ public class SearchResultsPage extends BasePage {
             double price = currencyToDouble(lblPrice.getAttribute("innerHTML").trim());
 
             products.add(
-                Product.Builder()
+                Product.builder()
                     .withUrl(url)
                     .withName(name)
                     .withPrice(price)

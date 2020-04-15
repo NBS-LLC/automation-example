@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ProductTest {
     @Test
     public void testThatBuilderCreatesValidProducts() {
-        Product product = Product.Builder()
+        Product product = Product.builder()
             .withName("Unit Test Product")
             .withPrice(12.34)
             .withUrl("http://localhost/unit-test-product")
@@ -23,7 +23,7 @@ public class ProductTest {
 
     @Test
     public void testThatBuilderWithMethodsAreOptional() {
-        Product product = Product.Builder()
+        Product product = Product.builder()
             .withName("Unit Test Product")
             .withUrl("http://localhost/unit-test-product")
             .build();
@@ -33,7 +33,7 @@ public class ProductTest {
 
     @Test
     public void testThatToStringIsMeaningful() {
-        Product product = Product.Builder()
+        Product product = Product.builder()
             .withName("Unit Test Product")
             .withPrice(12.34)
             .withUrl("http://localhost/unit-test-product")

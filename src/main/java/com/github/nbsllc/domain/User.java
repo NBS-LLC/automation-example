@@ -4,13 +4,23 @@ package com.github.nbsllc.domain;
  * User API data.
  */
 public class User {
-    private long id;
+    private Long id;
     private String name;
+    private String username;
     private String email;
     private Address address;
     private String phone;
     private String website;
     private Company company;
+
+    private User(Builder builder) {
+        name = builder.name;
+        username = builder.username;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
 
     public Address getAddress() {
         return address;
@@ -24,7 +34,7 @@ public class User {
         return email;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -34,6 +44,10 @@ public class User {
 
     public String getPhone() {
         return phone;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public String getWebsite() {
@@ -96,6 +110,29 @@ public class User {
 
         public String getName() {
             return name;
+        }
+    }
+
+    public static final class Builder {
+        private String name;
+        private String username;
+
+        private Builder() {
+            /* Dose Nothing */
+        }
+
+        public User build() {
+            return new User(this);
+        }
+
+        public Builder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder withUsername(String username) {
+            this.username = username;
+            return this;
         }
     }
 }

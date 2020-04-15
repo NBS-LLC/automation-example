@@ -8,14 +8,14 @@ public class Product {
     private String name;
     private Double price;
 
-    public Product(ProductBuilder builder) {
-        this.url = builder.url;
-        this.name = builder.name;
-        this.price = builder.price;
+    public Product(Builder builder) {
+        url = builder.url;
+        name = builder.name;
+        price = builder.price;
     }
 
-    public static ProductBuilder Builder() {
-        return new ProductBuilder();
+    public static Builder builder() {
+        return new Builder();
     }
 
     public String getName() {
@@ -35,12 +35,12 @@ public class Product {
         return getName() + " - " + getPrice();
     }
 
-    public static class ProductBuilder {
+    public static final class Builder {
         private String url;
         private String name;
         private Double price;
 
-        protected ProductBuilder() {
+        private Builder() {
             /* Does Nothing */
         }
 
@@ -48,17 +48,17 @@ public class Product {
             return new Product(this);
         }
 
-        public ProductBuilder withName(String name) {
+        public Builder withName(String name) {
             this.name = name;
             return this;
         }
 
-        public ProductBuilder withPrice(Double price) {
+        public Builder withPrice(Double price) {
             this.price = price;
             return this;
         }
 
-        public ProductBuilder withUrl(String url) {
+        public Builder withUrl(String url) {
             this.url = url;
             return this;
         }
