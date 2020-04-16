@@ -24,8 +24,8 @@ public class TestUserAPI extends APITestBase {
                 .contentType(ContentType.JSON)
                 .extract().jsonPath().getList("", User.class);
 
-        logger.log(Level.getLevel("STEP"), "Verify that the correct number of users are returned.");
-        logger.log(Level.getLevel("STEP"), "Verify that the user data is accurate.");
+        logger.log(Level.getLevel("STEP"), "Verifying that the correct number of users are returned.");
+        logger.log(Level.getLevel("STEP"), "Verifying that the user data is accurate.");
 
         assertThat(users).hasSize(10);
         assertThat(users).extracting(User::getName).contains("Clementine Bauch");
@@ -53,8 +53,8 @@ public class TestUserAPI extends APITestBase {
             .contentType(ContentType.JSON)
             .extract().as(User.class);
 
-        logger.log(Level.getLevel("STEP"), "Verify that the user data is added.");
-        logger.log(Level.getLevel("STEP"), "Verify that the user data is returned in the response.");
+        logger.log(Level.getLevel("STEP"), "Verifying that the user data is added.");
+        logger.log(Level.getLevel("STEP"), "Verifying that the user data is returned in the response.");
 
         SoftAssertions softly = new SoftAssertions();
         softly.assertThat(resp.getId()).isNotNull();
