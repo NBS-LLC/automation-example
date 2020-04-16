@@ -6,6 +6,8 @@ import org.apache.logging.log4j.Level;
 import org.assertj.core.api.SoftAssertions;
 import org.testng.annotations.Test;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 
 import static io.restassured.RestAssured.get;
@@ -43,6 +45,8 @@ public class TestUserAPI extends APITestBase {
             .withUsername("qatester")
             .build();
 
+        Instant start = Instant.now();
+
         User resp = given()
             .contentType(ContentType.JSON)
             .body(body)
@@ -53,6 +57,10 @@ public class TestUserAPI extends APITestBase {
             .contentType(ContentType.JSON)
             .extract().as(User.class);
 
+        Instant stop = Instant.now();
+        long elapsedSec = Duration.between(start, stop).getSeconds();
+        logger.info("Adding the user data took {} seconds.", elapsedSec);
+
         logger.log(Level.getLevel("STEP"), "Verifying that the user data is added.");
         logger.log(Level.getLevel("STEP"), "Verifying that the user data is returned in the response.");
 
@@ -60,6 +68,7 @@ public class TestUserAPI extends APITestBase {
         softly.assertThat(resp.getId()).isNotNull();
         softly.assertThat(resp.getName()).isEqualTo("QA Tester");
         softly.assertThat(resp.getUsername()).isEqualTo("qatester");
+        softly.assertThat(elapsedSec).as("elapsed").isLessThan(30);
         softly.assertAll();
     }
 }
