@@ -4,6 +4,7 @@ import com.github.nbsllc.domain.User;
 import io.restassured.http.ContentType;
 import org.apache.logging.log4j.Level;
 import org.assertj.core.api.SoftAssertions;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.time.Duration;
@@ -15,35 +16,9 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestUserAPI extends APITestBase {
-    @Test
-    public void testThatUserApiReturnsValidData() {
-        logger.log(Level.getLevel("STEP"), "Testing that the user API returns a collection of user data.");
-
-        List<User> users =
-            get("https://jsonplaceholder.typicode.com/users")
-                .then().assertThat()
-                .statusCode(200)
-                .contentType(ContentType.JSON)
-                .extract().jsonPath().getList("", User.class);
-
-        logger.log(Level.getLevel("STEP"), "Verifying that the correct number of users are returned.");
-        logger.log(Level.getLevel("STEP"), "Verifying that the user data is accurate.");
-
-        assertThat(users).hasSize(10);
-        assertThat(users).extracting(User::getName).contains("Clementine Bauch");
-        assertThat(users).filteredOn(u -> u.getName().equals("Clementine Bauch"))
-            .extracting("address.geo.lat").first()
-            .isEqualTo(-68.6102);
-    }
-
-    @Test
-    public void testThatNewUsersCanBeAdded() {
+    @Test(dataProvider = "userData")
+    public void testThatNewUsersCanBeAdded(User body) {
         logger.log(Level.getLevel("STEP"), "Testing that the user data can be added via the user API.");
-
-        User body = User.builder()
-            .withName("QA Tester")
-            .withUsername("qatester")
-            .build();
 
         Instant start = Instant.now();
 
@@ -66,9 +41,54 @@ public class TestUserAPI extends APITestBase {
 
         SoftAssertions softly = new SoftAssertions();
         softly.assertThat(resp.getId()).isNotNull();
-        softly.assertThat(resp.getName()).isEqualTo("QA Tester");
-        softly.assertThat(resp.getUsername()).isEqualTo("qatester");
+        softly.assertThat(resp.getName()).isEqualTo(body.getName());
+        softly.assertThat(resp.getUsername()).isEqualTo(body.getUsername());
         softly.assertThat(elapsedSec).as("elapsed").isLessThan(30);
         softly.assertAll();
+    }
+
+    @Test
+    public void testThatUserApiReturnsValidData() {
+        logger.log(Level.getLevel("STEP"), "Testing that the user API returns a collection of user data.");
+
+        List<User> users =
+            get("https://jsonplaceholder.typicode.com/users")
+                .then().assertThat()
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+                .extract().jsonPath().getList("", User.class);
+
+        logger.log(Level.getLevel("STEP"), "Verifying that the correct number of users are returned.");
+        logger.log(Level.getLevel("STEP"), "Verifying that the user data is accurate.");
+
+        assertThat(users).hasSize(10);
+        assertThat(users).extracting(User::getName).contains("Clementine Bauch");
+        assertThat(users).filteredOn(u -> u.getName().equals("Clementine Bauch"))
+            .extracting("address.geo.lat").first()
+            .isEqualTo(-68.6102);
+    }
+
+    @DataProvider
+    private Object[][] userData() {
+        return new Object[][] {
+            new Object[] {
+                User.builder()
+                    .withName("QA Tester 01")
+                    .withUsername("qatester01")
+                    .build()
+            },
+            new Object[] {
+                User.builder()
+                    .withName("QA Tester 02")
+                    .withUsername("qatester02")
+                    .build()
+            },
+            new Object[] {
+                User.builder()
+                    .withName("QA Tester 03")
+                    .withUsername("qatester03")
+                    .build()
+            }
+        };
     }
 }

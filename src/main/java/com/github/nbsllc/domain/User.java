@@ -54,6 +54,11 @@ public class User {
         return website;
     }
 
+    @Override
+    public String toString() {
+        return username;
+    }
+
     public static class Address {
         private String street;
         private String suite;
