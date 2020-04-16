@@ -3,6 +3,7 @@ package com.github.nbsllc;
 import com.github.nbsllc.domain.User;
 import io.restassured.http.ContentType;
 import org.apache.logging.log4j.Level;
+import org.assertj.core.api.SoftAssertions;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -35,18 +36,30 @@ public class TestUserAPI extends APITestBase {
 
     @Test
     public void testThatNewUsersCanBeAdded() {
+        logger.log(Level.getLevel("STEP"), "Testing that the user data can be added via the user API.");
+
         User body = User.builder()
             .withName("QA Tester")
             .withUsername("qatester")
             .build();
 
-        given()
+        User resp = given()
             .contentType(ContentType.JSON)
             .body(body)
             .when()
             .post("https://jsonplaceholder.typicode.com/users")
             .then().assertThat()
             .statusCode(201)
-            .contentType(ContentType.JSON);
+            .contentType(ContentType.JSON)
+            .extract().as(User.class);
+
+        logger.log(Level.getLevel("STEP"), "Verify that the user data is added.");
+        logger.log(Level.getLevel("STEP"), "Verify that the user data is returned in the response.");
+
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(resp.getId()).isNotNull();
+        softly.assertThat(resp.getName()).isEqualTo("QA Tester");
+        softly.assertThat(resp.getUsername()).isEqualTo("qatester");
+        softly.assertAll();
     }
 }
